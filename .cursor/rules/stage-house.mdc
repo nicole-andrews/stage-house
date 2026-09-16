@@ -1,0 +1,15 @@
+---
+description: Stage House product context, stack, and agent workflow
+alwaysApply: true
+---
+
+# Stage House
+
+Lead-gen marketing site for a home staging company.
+
+- Product spec: `Requirements.md`
+- Copy and listings: `src/content/site.ts`
+- Pages: Home, About, Services, Portfolio, Testimonials, Contact
+- Primary CTA: Request a Consultation → `/contact`
+
+Stack: Next.js App Router in `src/`, TypeScript, Tailwind v4. Prefer server components. Update `site.ts` for content changes. Do not invent real business facts (city, founder, client names). After UI changes, verify the route and shared nav.

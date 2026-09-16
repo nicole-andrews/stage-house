@@ -1,0 +1,14 @@
+---
+description: React and Next.js patterns for Stage House
+globs: src/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# UI patterns
+
+- App Router pages in `src/app/<route>/page.tsx` export `metadata`
+- Put reusable UI in `src/components/`
+- Use `next/link` and `next/image`
+- `"use client"` only when the file needs state, effects, or browser APIs
+- Tailwind tokens: `background`, `foreground`, `muted`, `gold`, `gold-strong`, `panel`, `line`
+- Headlines: `font-serif`; body: default sans
