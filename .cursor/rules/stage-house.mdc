@@ -12,4 +12,4 @@ Lead-gen marketing site for a home staging company.
 - Pages: Home, About, Services, Portfolio, Testimonials, Contact
 - Primary CTA: Request a Consultation → `/contact`
 
-Stack: Next.js App Router in `src/`, TypeScript, Tailwind v4. Prefer server components. Update `site.ts` for content changes. Do not invent real business facts (city, founder, client names). After UI changes, verify the route and shared nav.
+Stack: Next.js App Router in `src/`, TypeScript, Tailwind v4. Prefer server components. Update `site.ts` for content changes. Do not invent real business facts (city, founder, client names). After UI changes, verify the route and shared nav. Visual language: warm white, charcoal, restrained taupe, editorial photography.

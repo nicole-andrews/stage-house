@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/PageHero";
+import Link from "next/link";
+import { FeaturedProjects } from "@/components/portfolio/FeaturedProjects";
+import { PortfolioBrowse } from "@/components/portfolio/PortfolioBrowse";
+import { PortfolioHeader } from "@/components/portfolio/PortfolioHeader";
 import { site } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -9,24 +12,22 @@ export const metadata: Metadata = {
 export default function PortfolioPage() {
   return (
     <>
-      <PageHero
-        eyebrow="Portfolio"
-        title="Work that lets the rooms speak."
-        body="These are layout placeholders. Add photos to /public and project entries in src/content/site.ts."
-      />
-      <section className="mx-auto grid max-w-6xl gap-6 px-5 pb-20 md:grid-cols-3">
-        {site.portfolio.map((project) => (
-          <article key={project.slug} className="overflow-hidden rounded-2xl border border-line">
-            <div className="aspect-[4/3] bg-panel" />
-            <div className="p-5">
-              <p className="text-xs tracking-[0.18em] text-gold uppercase">
-                {project.location}
-              </p>
-              <h2 className="mt-2 font-serif text-2xl">{project.title}</h2>
-              <p className="mt-2 text-sm leading-6 text-muted">{project.summary}</p>
-            </div>
-          </article>
-        ))}
+      <PortfolioHeader />
+      <FeaturedProjects />
+      <PortfolioBrowse />
+      <section className="border-t border-line bg-background-warm">
+        <div className="mx-auto max-w-3xl px-6 py-24 text-center lg:py-28">
+          <h2 className="font-serif text-4xl font-normal leading-snug text-balance sm:text-5xl">
+            Let’s prepare the home to be seen.
+          </h2>
+          <p className="mx-auto mt-6 max-w-xl text-[1.05rem] leading-[1.9] text-muted">
+            Request a consultation to talk through the property, timeline, and
+            the rooms that need the most care.
+          </p>
+          <Link href={site.primaryCta.href} className="btn-primary mt-10">
+            {site.primaryCta.label}
+          </Link>
+        </div>
       </section>
     </>
   );

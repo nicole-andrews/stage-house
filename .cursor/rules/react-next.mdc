@@ -10,5 +10,7 @@ alwaysApply: false
 - Put reusable UI in `src/components/`
 - Use `next/link` and `next/image`
 - `"use client"` only when the file needs state, effects, or browser APIs
-- Tailwind tokens: `background`, `foreground`, `muted`, `gold`, `gold-strong`, `panel`, `line`
-- Headlines: `font-serif`; body: default sans
+- Tailwind tokens: `background`, `background-warm`, `foreground`, `muted`, `taupe`, `taupe-light`, `taupe-dark`, `panel`, `line`
+- White is the dominant background; taupe is an accent, not a fill
+- Headlines: `font-serif` at regular/medium weight; body and nav: sans
+- Buttons: slightly rounded rectangles (`.btn-primary`, `.btn-outline`), not pills

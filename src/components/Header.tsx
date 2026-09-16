@@ -11,22 +11,28 @@ export function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-20 border-b border-line bg-background/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
-        <Link href="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
+    <header className="sticky top-0 z-20 border-b border-line/70 bg-white/85 backdrop-blur-md">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-5 lg:px-10">
+        <Link
+          href="/"
+          className="flex shrink-0 items-center gap-3"
+          onClick={() => setOpen(false)}
+        >
           <Image
-            src="/brand/logo.png"
-            alt={`${site.name} logo`}
-            width={40}
-            height={40}
-            className="h-10 w-10 object-contain"
+            src="/brand/logo-lockup.png"
+            alt=""
+            width={220}
+            height={178}
+            className="h-12 w-auto sm:h-14"
             priority
           />
-          <span className="font-serif text-xl tracking-wide">{site.name}</span>
+          <span className="font-serif text-[1.15rem] leading-tight tracking-[0.03em] text-foreground sm:text-[1.35rem]">
+            {site.name}
+          </span>
         </Link>
 
-        <nav className="hidden items-center gap-6 text-sm text-muted md:flex">
-          {site.nav.map((item) => {
+        <nav className="hidden items-center gap-9 text-[0.72rem] tracking-[0.18em] text-muted uppercase md:flex">
+          {site.headerNav.map((item) => {
             const active = pathname === item.href;
             return (
               <Link
@@ -35,7 +41,7 @@ export function Header() {
                 className={
                   active
                     ? "text-foreground"
-                    : "transition-colors hover:text-foreground"
+                    : "transition-colors duration-200 hover:text-foreground"
                 }
               >
                 {item.label}
@@ -44,16 +50,13 @@ export function Header() {
           })}
         </nav>
 
-        <Link
-          href={site.primaryCta.href}
-          className="hidden rounded-full bg-gold px-4 py-2 text-sm font-medium text-background transition-colors hover:bg-gold-strong md:inline-flex"
-        >
+        <Link href={site.primaryCta.href} className="btn-primary hidden md:inline-flex">
           {site.primaryCta.label}
         </Link>
 
         <button
           type="button"
-          className="rounded-full border border-line px-3 py-1.5 text-sm md:hidden"
+          className="border border-foreground/20 px-3 py-2 text-[0.7rem] tracking-[0.16em] uppercase md:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
           onClick={() => setOpen((value) => !value)}
@@ -65,14 +68,14 @@ export function Header() {
       {open ? (
         <nav
           id="mobile-nav"
-          className="flex flex-col gap-3 border-t border-line px-5 py-4 text-sm md:hidden"
+          className="flex flex-col gap-5 border-t border-line px-6 py-8 text-[0.8rem] tracking-[0.16em] text-muted uppercase md:hidden"
         >
-          {site.nav.map((item) => (
+          {site.headerNav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               onClick={() => setOpen(false)}
-              className="text-muted hover:text-foreground"
+              className="hover:text-foreground"
             >
               {item.label}
             </Link>
@@ -80,7 +83,7 @@ export function Header() {
           <Link
             href={site.primaryCta.href}
             onClick={() => setOpen(false)}
-            className="mt-1 inline-flex w-fit rounded-full bg-gold px-4 py-2 font-medium text-background"
+            className="btn-primary mt-2 w-fit"
           >
             {site.primaryCta.label}
           </Link>

@@ -20,7 +20,8 @@ Marketing site for a home staging business. Goal: generate consultation leads an
 ## Product source of truth
 
 - `Requirements.md` — pages and primary CTA
-- `src/content/site.ts` — name, nav, copy, services, portfolio, testimonials, contact
+- `src/content/site.ts` — name, nav, copy, services, portfolio titles, testimonials, contact
+- `src/content/portfolio.ts` — portfolio projects, images, and room metadata
 - Do not hardcode marketing copy in components when it belongs in `site.ts`
 
 ## Site map
@@ -33,11 +34,11 @@ Home, About, Services, Portfolio, Testimonials, Contact. Primary CTA is always *
 - Shared chrome lives in `src/components/`
 - Brand assets: `public/brand/` (logo from `icons/`)
 - Portfolio photos go in `public/` and are referenced from `site.ts`
-- Keep the look: dark background, cream text, gold accents, serif headlines
+- Keep the look: warm white, charcoal text, taupe accents, serif headlines, photography-first layouts
 
 ## Working with this agent
 
 1. Change copy or listings in `src/content/site.ts` unless a new page or layout is required.
 2. After UI work, run the site and check the changed route plus nav/CTA.
 3. Do not invent a city, founder name, or real client quotes — ask or leave a clear placeholder.
-4. Consultation submissions hit `POST /api/consultation` (placeholder; no email yet).
+4. Consultation submissions hit `POST /api/consultation`, which emails `site.contact.email` via Resend (`RESEND_API_KEY`, `RESEND_FROM`).
