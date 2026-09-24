@@ -7,30 +7,34 @@ export const site = {
     eyebrow: "Designed to sell",
     headline: "Styled to Feel Like Home.",
     body: "Stage House Interiors is a boutique home staging company serving Santa Clara, Silicon Valley, and the greater Bay Area. With more than 10 years of experience, we create polished, inviting spaces that highlight each home’s best features.",
+    opening: {
+      title: "Stage House Interiors",
+      line: "Santa Clara · Bay Area",
+    },
     images: {
       hero: {
-        src: "/images/home/kitchen-hero-photo.png",
-        alt: "A staged kitchen with blue cabinetry, a marble island, and a rustic dining table under glass pendant lights",
-        width: 1840,
-        height: 1226,
+        src: "/images/home/hero-deodara.jpg",
+        alt: "A staged living room with a brick fireplace, cream seating, and a wide garden window",
+        width: 1280,
+        height: 852,
       },
       living: {
-        src: "/images/home/living-neutral.jpg",
-        alt: "A warm, layered living room with beige seating, a fiddle leaf fig, and gold-framed art",
-        width: 1350,
-        height: 1800,
+        src: "/images/home/living-deodara.jpg",
+        alt: "A staged living room with beige seating, a fiddle leaf fig, and a gold-framed painting",
+        width: 3024,
+        height: 4032,
       },
       artwork: {
-        src: "/images/home/living-artwork.jpg",
-        alt: "A living room centered on a sofa, oak table, and abstract artwork",
-        width: 1800,
-        height: 1350,
+        src: "/images/home/living-dining-deodara.jpg",
+        alt: "A staged living room looking through to the dining area, with a wood coffee table and cream chairs",
+        width: 1280,
+        height: 853,
       },
       dining: {
-        src: "/images/home/dining.jpg",
-        alt: "A dining room with a wood table, cream chairs, and an arched mirror",
-        width: 1350,
-        height: 1800,
+        src: "/images/home/outdoor-dining-deodara.jpg",
+        alt: "An outdoor dining table with woven chairs under a fruit tree",
+        width: 1280,
+        height: 853,
       },
     },
   },
@@ -55,36 +59,36 @@ export const site = {
     ],
     images: {
       hero: {
-        src: "/images/home/Home-page-hero-photo.png",
-        alt: "A staged living and dining room with cream seating, a glass coffee table, and tall windows looking onto trees",
+        src: "/images/about/kitchen-3rd-st-campbell.png",
+        alt: "A staged living room looking through to dining, with a white brick fireplace and cream seating",
       },
       overlay: {
         src: "/brand/white-gradient.png",
         alt: "",
       },
       kitchenDining: {
-        src: "/images/about/dining-area-kitchen.png",
-        alt: "A dining room with a rustic wood table beside a blue kitchen and wood-framed glass doors",
+        src: "/images/about/living-fireplace-deodara.jpg",
+        alt: "A staged living room with a brick fireplace, cream seating, and a wide garden window",
       },
       kitchen: {
-        src: "/images/about/kitchen-knick-knacks.png",
-        alt: "A blue kitchen with marble counters, a herringbone backsplash, and styled accessories",
+        src: "/images/about/details-closet-deodara.jpg",
+        alt: "A staged dressing area with a clothing rack, ottoman, and greenery",
       },
       outdoor: {
-        src: "/images/about/Outside-modern.png",
-        alt: "A modern outdoor seating area opening into a staged kitchen and living room",
+        src: "/images/about/outdoor-dining-deodara.jpg",
+        alt: "An outdoor dining table with woven chairs under a fruit tree",
       },
       wine: {
-        src: "/images/about/wine-cellar.png",
-        alt: "A wine cellar staged with a high table, bar stools, and a barrel beside lit bottle racks",
+        src: "/images/about/details-closet-deodara.jpg",
+        alt: "A staged dressing area with a clothing rack, ottoman, and greenery",
       },
       greenery: {
-        src: "/images/about/outdoor-greenery.png",
-        alt: "A wine cellar staged with a high table, bar stools, and a barrel beside lit bottle racks",
+        src: "/images/about/outdoor-dining-deodara.jpg",
+        alt: "An outdoor dining table with woven chairs under a fruit tree",
       },
       livingDining: {
-        src: "/images/about/modern-white-living-dining.png",
-        alt: "Modern Dining room, white white furniture and blue accents.",
+        src: "/images/about/living-fireplace-deodara.jpg",
+        alt: "A staged living room with a brick fireplace, cream seating, and a wide garden window",
       },
     },
   },
@@ -143,7 +147,7 @@ export const site = {
         body: "We furnish and style the entire property using our curated inventory of furniture, artwork, rugs, lighting, bedding, greenery, and accessories. Each room is designed to highlight the home’s best features, create a cohesive flow, and help buyers connect with the space.",
         image: {
           src: "/images/services/full-staging.jpg",
-          alt: "A vaulted living room staged with a cream sofa, wood coffee table, area rug, and large artwork",
+          alt: "A staged living room with beige seating, a fiddle leaf fig, and a gold-framed painting",
         },
       },
       {
@@ -152,7 +156,7 @@ export const site = {
         body: "For occupied or partially furnished homes, we work with what is already there and add the pieces needed to create a polished, market-ready look. This may include furniture, artwork, textiles, lighting, greenery, and accessories selected specifically for the property.",
         image: {
           src: "/images/services/partial-staging.jpg",
-          alt: "A living room with a white sofa, nested wood tables, greenery, and abstract wall art",
+          alt: "A staged living room looking through to dining, with a white brick fireplace and cream seating",
         },
       },
       {
@@ -161,18 +165,18 @@ export const site = {
         body: "We furnish and style short- and long-term rentals with a focus on comfort, durability, and visual appeal. From furniture selection to finishing touches, we create welcoming spaces that feel complete and photograph beautifully.",
         image: {
           src: "/images/services/rental-styling.jpg",
-          alt: "A living room with two armchairs, a sofa with rust pillows, lamps, and a throw blanket",
+          alt: "An outdoor dining table with woven chairs under a fruit tree",
         },
       },
     ],
     images: {
       hero: {
-        src: "/images/services/Services_photo.png",
-        alt: "A staged kitchen and dining area with blue cabinetry, a rustic wood table, and glass pendant lights",
+        src: "/images/services/hero-deodara.jpg",
+        alt: "A staged living room looking through to dining, with a white brick fireplace and cream seating",
       },
       approach: {
-        src: "/images/services/approach.png",
-        alt: "A staged living and dining room with a white sofa, navy pillows, and windows looking onto a garden",
+        src: "/images/services/approach-deodara.jpg",
+        alt: "A staged living room with a brick fireplace, cream seating, and a wide garden window",
       },
     },
     approach: {
@@ -188,10 +192,18 @@ export const site = {
   },
   portfolio: [
     {
-      slug: "light-filled-living",
-      title: "Light-filled living room",
-      location: "Sample listing",
-      summary: "Replace this with a real project once photos are ready.",
+      slug: "deodara-drive",
+      title: "Deodara Drive",
+      location: "Los Altos",
+      summary:
+        "A recently staged Los Altos home with a calm living room, quiet bedrooms, and an outdoor dining terrace.",
+    },
+    {
+      slug: "3rd-st-campbell",
+      title: "3rd Street",
+      location: "Campbell",
+      summary:
+        "An open living, dining, and kitchen staged with quiet bedrooms and a patio for outdoor dining.",
     },
     {
       slug: "quiet-primary-suite",

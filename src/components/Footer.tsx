@@ -1,12 +1,22 @@
 import Link from "next/link";
 import { site } from "@/content/site";
+import Image from "next/image";
 
 export function Footer() {
   return (
     <footer className="mt-auto border-t border-line bg-background">
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-14 lg:flex-row lg:items-end lg:justify-between lg:px-10">
         <div>
-          <p className="font-serif text-2xl tracking-[0.03em]">{site.name}</p>
+          <div className="flex items-center gap-2.5">
+            <Image
+              src="/brand/logo-lockup.png"
+              alt=""
+              width={220}
+              height={178}
+              className="h-9 w-auto sm:h-10"
+            />
+            <p className="font-serif text-2xl tracking-[0.03em]">{site.name}</p>
+          </div>
           <p className="mt-3 max-w-sm text-sm leading-7 text-muted">
             Based in {site.contact.basedIn}, serving {site.contact.serviceArea}.
           </p>

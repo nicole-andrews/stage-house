@@ -1,21 +1,34 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ServiceOfferings } from "@/components/ServiceOfferings";
 import { site } from "@/content/site";
+import ConsultationSection from "@/components/ConsultationEncourageSection";
 
 export default function HomePage() {
   const { home } = site;
 
   return (
     <>
-      <section className="relative h-[68vh] min-h-[420px] w-full overflow-hidden sm:h-[78vh]">
+      <section className="relative h-svh min-h-[36rem] w-full overflow-hidden">
         <Image
           src={home.images.hero.src}
           alt={home.images.hero.alt}
           fill
           priority
           sizes="100vw"
-          className="object-cover object-center"
+          className="object-cover object-[center_58%]"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-black/5" />
+        <div className="absolute inset-x-0 bottom-0 z-10">
+          <div className="mx-auto max-w-7xl px-6 pb-10 sm:px-10 sm:pb-12 lg:px-14 lg:pb-16">
+            <p className="text-[0.65rem] tracking-[0.32em] text-white/70 uppercase">
+              {home.opening.line}
+            </p>
+            <h1 className="mt-3 max-w-xl font-serif text-4xl font-normal leading-[1.15] tracking-[0.02em] text-white/50 sm:text-5xl lg:text-[3.25rem]">
+              {home.opening.title}
+            </h1>
+          </div>
+        </div>
       </section>
 
       <section className="mx-auto grid max-w-7xl items-center gap-14 px-6 py-24 lg:grid-cols-12 lg:gap-20 lg:px-10 lg:py-32">
@@ -23,9 +36,9 @@ export default function HomePage() {
           <p className="text-[0.7rem] tracking-[0.28em] text-taupe-dark uppercase">
             {home.eyebrow}
           </p>
-          <h1 className="mt-5 font-serif text-5xl font-normal leading-[1.12] text-balance sm:text-6xl lg:text-[4.25rem]">
+          <h2 className="mt-5 font-serif text-5xl font-normal leading-[1.12] text-balance sm:text-6xl lg:text-[4.25rem]">
             {home.headline}
-          </h1>
+          </h2>
           <p className="mt-8 max-w-md text-[1.05rem] leading-[1.9] text-muted">
             {home.body}
           </p>
@@ -92,29 +105,13 @@ export default function HomePage() {
       </section>
 
       <section className="border-t border-line">
-        <div className="mx-auto grid max-w-7xl gap-16 px-6 py-24 md:grid-cols-3 lg:gap-20 lg:px-10 lg:py-28">
-          {site.services.slice(0, 3).map((service) => (
-            <article key={service.title}>
-              <h2 className="font-serif text-3xl font-normal">{service.title}</h2>
-              <p className="mt-5 leading-[1.85] text-muted">{service.body}</p>
-            </article>
-          ))}
+        <div className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
+          <ServiceOfferings showBody={false} />
         </div>
       </section>
 
       <section className="bg-background-warm">
-        <div className="mx-auto max-w-3xl px-6 py-24 text-center lg:py-28">
-          <h2 className="font-serif text-4xl font-normal leading-snug text-balance sm:text-5xl">
-            Let’s prepare the home to be seen.
-          </h2>
-          <p className="mx-auto mt-6 max-w-xl text-[1.05rem] leading-[1.9] text-muted">
-            Request a consultation to talk through the property, timeline, and
-            the rooms that need the most care.
-          </p>
-          <Link href={site.primaryCta.href} className="btn-primary mt-10">
-            {site.primaryCta.label}
-          </Link>
-        </div>
+        <ConsultationSection />
       </section>
     </>
   );

@@ -135,41 +135,28 @@ export default function AboutPage() {
               className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.02]"
             />
           </div>
-          {/* <div className="group relative aspect-[4/5] overflow-hidden sm:col-span-2 sm:aspect-[3/2]">
-            <Image
-              src={about.images.wine.src}
-              alt={about.images.wine.alt}
-              fill
-              sizes="100vw"
-              className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.02]"
-            />
-          </div> */}
         </div>
       </section>
-
-      <section className="mx-auto max-w-7xl px-6 py-20 lg:px-10 lg:py-28">
-        <div className="group relative aspect-[3/2] overflow-hidden">
-          <Image
-            src={about.images.outdoor.src}
-            alt={about.images.outdoor.alt}
-            fill
-            sizes="100vw"
-            className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.015]"
-          />
-        </div>
-      </section>
-
-      <section className="border-t border-line bg-background-warm">
-        <div className="mx-auto max-w-3xl px-6 py-24 text-center lg:py-28">
-          <h2 className="font-serif text-4xl font-normal leading-snug text-balance sm:text-5xl">
-            {about.tagline}
-          </h2>
-          <p className="mx-auto mt-6 max-w-xl text-[1.05rem] leading-[1.9] text-muted">
-            {about.clients}
-          </p>
-          <Link href={site.primaryCta.href} className="btn-primary mt-10">
-            {site.primaryCta.label}
-          </Link>
+      <section className="relative min-h-[32rem] overflow-hidden lg:min-h-[40rem]">
+        <Image
+          src={about.images.outdoor.src}
+          alt={about.images.outdoor.alt}
+          fill
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        <div className="relative z-10 mx-auto flex min-h-[32rem] max-w-7xl items-center justify-center px-6 py-24 lg:min-h-[40rem] lg:px-10 lg:py-32">
+          <div className="w-full max-w-4xl bg-white/90 px-7 py-8 text-center sm:px-10 sm:py-12">
+            <h2 className="font-serif text-4xl font-normal leading-snug text-balance sm:text-5xl">
+              {about.tagline}
+            </h2>
+            <p className="mt-6 text-[1.05rem] leading-[1.9] text-muted">
+              {about.clients}
+            </p>
+            <Link href={site.primaryCta.href} className="btn-primary mt-8">
+              {site.primaryCta.label}
+            </Link>
+          </div>
         </div>
       </section>
     </>
