@@ -74,7 +74,7 @@ export function ConsultationForm() {
         disabled={status === "sending"}
         className="mt-2 w-fit rounded-full bg-gold px-5 py-2.5 text-sm font-medium text-background hover:bg-gold-strong disabled:opacity-60"
       >
-        {status === "sending" ? "Sending…" : "Request a Consultation"}
+        {status === "sending" ? "Sending…" : "Contact Us."}
       </button>
       {status === "error" ? (
         <p className="text-sm text-gold">Something went wrong. Please try again.</p>

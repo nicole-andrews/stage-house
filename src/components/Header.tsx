@@ -16,11 +16,11 @@ export function Header() {
     <header
       className={
         isHome
-          ? "absolute inset-x-0 top-0 z-30"
+          ? "fixed inset-x-0 top-0 z-30 bg-white/40 backdrop-blur-[2px]"
           : "sticky top-0 z-20 border-b border-line/50 backdrop-blur-md"
       }
     >
-      <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto] items-center gap-4 px-6 py-2.5 md:grid-cols-[1fr_auto_1fr] lg:px-10">
+      <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto] items-center gap-4 px-6 py-1.5 md:grid-cols-[1fr_auto_1fr] lg:px-10">
         <Link
           href="/"
           className="flex shrink-0 items-center gap-2.5 justify-self-start"
@@ -31,15 +31,19 @@ export function Header() {
             alt=""
             width={220}
             height={178}
-            className="h-9 w-auto sm:h-10"
+            className="h-7 w-auto sm:h-8"
             priority
           />
-          <span className="font-serif text-base leading-tight tracking-[0.03em] text-foreground sm:text-lg">
+          <span className="font-serif text-sm leading-tight tracking-[0.03em] text-foreground sm:text-base">
             {site.name}
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-7 justify-self-center text-[0.68rem] tracking-[0.18em] text-muted uppercase md:flex">
+        <nav
+          className={`hidden items-center gap-7 justify-self-center text-[0.68rem] tracking-[0.18em] uppercase md:flex ${
+            isHome ? "text-foreground" : "text-muted"
+          }`}
+        >
           {site.headerNav.map((item) => {
             const active = pathname === item.href;
             return (
@@ -61,14 +65,14 @@ export function Header() {
           {!isHome && !isContact && (
             <Link
               href={site.primaryCta.href}
-              className="btn-primary hidden !px-4 !py-2 md:inline-flex"
+              className="btn-primary hidden !px-3.5 !py-1.5 md:inline-flex"
             >
               {site.primaryCta.label}
             </Link>
           )}
           <button
             type="button"
-            className="border border-foreground/20 px-3 py-2 text-[0.7rem] tracking-[0.16em] uppercase md:hidden"
+            className="border border-foreground/20 px-2.5 py-1 text-[0.7rem] tracking-[0.16em] uppercase md:hidden"
             aria-expanded={open}
             aria-controls="mobile-nav"
             onClick={() => setOpen((value) => !value)}

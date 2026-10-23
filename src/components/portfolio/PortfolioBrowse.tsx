@@ -4,35 +4,25 @@ import { useMemo, useState } from "react";
 import { PortfolioFilters } from "@/components/portfolio/PortfolioFilters";
 import { PortfolioGallery } from "@/components/portfolio/PortfolioGallery";
 import { PortfolioLightbox } from "@/components/portfolio/PortfolioLightbox";
-import {
-  getGalleryImages,
-  type GalleryFilter,
-  type PortfolioImageView,
-} from "@/content/portfolio";
+import type { GalleryFilter, PortfolioImageView } from "@/content/portfolio-types";
 
 export function PortfolioBrowse({
   images,
   eyebrow = "Browse all work",
 }: {
-  images?: PortfolioImageView[];
+  images: PortfolioImageView[];
   eyebrow?: string;
 }) {
   const [filter, setFilter] = useState<GalleryFilter>("all");
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const gallery = useMemo(() => {
-    if (images) {
-      return filter === "all"
-        ? images
-        : images.filter((image) => image.roomType === filter);
-    }
-    return getGalleryImages(filter);
+    return filter === "all"
+      ? images
+      : images.filter((image) => image.roomType === filter);
   }, [filter, images]);
 
-  const source = useMemo(
-    () => images ?? getGalleryImages("all"),
-    [images],
-  );
+  const source = images;
 
   const roomTypesInSource = useMemo(
     () => [...new Set(source.map((image) => image.roomType))],

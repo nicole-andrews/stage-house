@@ -1,0 +1,99 @@
+{
+  "MAIN_PAGE": {
+    "hero_photo": {
+      "file": "wakefield-tr/livingroom-01-wakefield-tr.jpg",
+      "alt": "A staged living room with cream sofas facing glass doors that open to a pool and patio",
+      "width": 4032,
+      "height": 3024,
+      "location": "Home, first screen. Full-viewport hero behind the title, cropped to the window (100vw × 100svh)."
+    },
+    "intro_photo": {
+      "file": "deodara-drive/living-01.jpg",
+      "alt": "A staged living room with beige seating, a fiddle leaf fig, and a gold-framed painting",
+      "width": 3024,
+      "height": 4032,
+      "location": "Home, right of “Styled to Feel Like Home.” Portrait frame, 4:5 (3:4 on large screens)."
+    },
+    "wide_photo": {
+      "file": "sf/living-03.png",
+      "alt": "A living room looking toward a balcony, with cream chairs and a black-and-white painting",
+      "width": 2410,
+      "height": 1532,
+      "location": "Home, full-width band on the warm background under the intro. Landscape frame, 3:2."
+    }
+  },
+  "ABOUT_US": {
+    "hero_photo": {
+      "file": "sf/living-04.png",
+      "alt": "A living room opening toward a dining area, with cream seating and a round mirror",
+      "width": 2402,
+      "height": 1534,
+      "location": "About, hero behind the white copy card. At least 78vh tall, cropped to cover."
+    },
+    "differentiator_photo": {
+      "file": "dining/dining-wood-table.png",
+      "alt": "A wood dining table with gray chairs, looking through glass doors to a garden patio",
+      "width": 1842,
+      "height": 1224,
+      "location": "About, full-bleed photo behind the “What sets us apart” card. At least 78vh tall, cropped toward the table."
+    },
+    "greenery_photo": {
+      "file": "marilyn-ave-mv/living-room-03-marilyn-ave-mv.jpeg",
+      "alt": "A fireplace seating nook with a round mirror, tufted ottomans, and a tall plant",
+      "width": 4284,
+      "height": 5712,
+      "location": "About, left photo in the two-up pair on the warm background. Portrait frame, 4:5."
+    },
+    "kitchen_photo": {
+      "file": "3rd-st-campbell/kitchen-01.png",
+      "alt": "A white kitchen with a granite island, pendant lights, and stainless appliances",
+      "width": 2032,
+      "height": 1346,
+      "location": "About, right photo in the two-up pair on the warm background. Portrait frame, 4:5."
+    }, 
+    "closing_photo": {
+      "file": "deodara-drive/details-02.jpg",
+      "alt": "An outdoor dining table with woven chairs under a fruit tree",
+      "width": 1280,
+      "height": 853,
+      "location": "About, closing band behind the tagline card. At least 32rem tall (40rem on large screens)."
+    }
+  },
+  "SERVICES": {
+    "hero_photo": {
+      "file": "marilyn-ave-mv/living-room-01-marilyn-ave-mv.jpeg",
+      "alt": "A staged living room with a light sofa, brass coffee table, and an arched wood mirror",
+      "width": 4032,
+      "height": 3024,
+      "location": "Services, hero behind the headline card on the right. At least 68vh tall (78vh from small screens up), cropped toward the table."
+    },
+    "approach_photo": {
+      "file": "living/living-room-dining-clean.jpg",
+      "alt": "An open living and dining room with blue pillows, a glass coffee table, and French doors",
+      "width": 4124,
+      "height": 2748,
+      "location": "Services, closing band behind “Our Approach.” At least 32rem tall (40rem on large screens), cropped from the left."
+    },
+    "full_staging_photo": {
+      "file": "wakefield-tr/diningroom-01-wakefield-tr.jpg",
+      "alt": "A glass dining table with beige chairs, a geometric chandelier, and abstract art",
+      "width": 3024,
+      "height": 4032,
+      "location": "Home and Services, Full Staging card. Portrait frame, 4:5."
+    },
+    "partial_staging_photo": {
+      "file": "wakefield-tr/livingroom-02-wakefield-tr.jpg",
+      "alt": "Two white chairs with velvet pillows beneath a large textured painting",
+      "width": 3024,
+      "height": 4032,
+      "location": "Home and Services, Partial Staging card. Portrait frame, 4:5."
+    },
+    "rental_photo": {
+      "file": "3rd-st-campbell/desk-close-3rd-campbell.png",
+      "alt": "A close view of a bedroom desk with a clock, books, and a boucle chair",
+      "width": 1172,
+      "height": 1344,
+      "location": "Home and Services, Rental & Airbnb styling card. Portrait frame, 4:5."
+    }
+  }
+}

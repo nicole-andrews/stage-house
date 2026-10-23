@@ -4,10 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { PortfolioBrowse } from "@/components/portfolio/PortfolioBrowse";
 import {
+  getFeaturedProjects,
   getProjectBySlug,
   getProjectCover,
   getProjectImages,
-  portfolioProjects,
 } from "@/content/portfolio";
 
 type ProjectPageProps = {
@@ -15,7 +15,7 @@ type ProjectPageProps = {
 };
 
 export function generateStaticParams() {
-  return portfolioProjects.map((project) => ({ slug: project.slug }));
+  return getFeaturedProjects().map((project) => ({ slug: project.slug }));
 }
 
 export async function generateMetadata({

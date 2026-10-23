@@ -1,22 +1,28 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ServiceOfferings } from "@/components/ServiceOfferings";
+import { MAIN_PAGE, placedPhoto } from "@/content/page-photos";
 import { site } from "@/content/site";
 import ConsultationSection from "@/components/ConsultationEncourageSection";
 
 export default function HomePage() {
   const { home } = site;
+  const images = {
+    hero: placedPhoto(MAIN_PAGE.hero_photo),
+    intro: placedPhoto(MAIN_PAGE.intro_photo),
+    wide: placedPhoto(MAIN_PAGE.wide_photo),
+  };
 
   return (
     <>
       <section className="relative h-svh min-h-[36rem] w-full overflow-hidden">
         <Image
-          src={home.images.hero.src}
-          alt={home.images.hero.alt}
+          src={images.hero.src}
+          alt={images.hero.alt}
           fill
           priority
           sizes="100vw"
-          className="object-cover object-[center_58%]"
+          className="object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-black/5" />
         <div className="absolute inset-x-0 bottom-0 z-10">
@@ -53,8 +59,8 @@ export default function HomePage() {
         </div>
         <div className="group relative aspect-[4/5] overflow-hidden lg:col-span-7 lg:aspect-[3/4]">
           <Image
-            src={home.images.living.src}
-            alt={home.images.living.alt}
+            src={images.intro.src}
+            alt={images.intro.alt}
             fill
             sizes="(min-width: 1024px) 55vw, 100vw"
             className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.02]"
@@ -66,41 +72,13 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-6 py-20 lg:px-10 lg:py-28">
           <div className="group relative aspect-[3/2] overflow-hidden">
             <Image
-              src={home.images.artwork.src}
-              alt={home.images.artwork.alt}
+              src={images.wide.src}
+              alt={images.wide.alt}
               fill
               sizes="100vw"
               className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.015]"
             />
           </div>
-        </div>
-      </section>
-
-      <section className="mx-auto grid max-w-7xl items-start gap-10 px-6 py-24 md:grid-cols-2 md:gap-16 lg:gap-20 lg:px-10 lg:py-32">
-        <div className="group relative aspect-[4/5] overflow-hidden lg:aspect-[3/4]">
-          <Image
-            src={home.images.dining.src}
-            alt={home.images.dining.alt}
-            fill
-            sizes="(min-width: 768px) 50vw, 100vw"
-            className="object-cover object-[center_40%] transition-transform duration-700 ease-out group-hover:scale-[1.02]"
-          />
-        </div>
-        <div>
-          <p className="text-[0.7rem] tracking-[0.28em] text-taupe-dark uppercase">
-            Santa Clara · Bay Area
-          </p>
-          <h2 className="mt-5 font-serif text-4xl font-normal leading-snug text-balance sm:text-5xl">
-            Polished rooms, ready for buyers.
-          </h2>
-          <p className="mt-7 text-[1.05rem] leading-[1.9] text-muted">
-            Based in {site.contact.basedIn}, we stage homes across{" "}
-            {site.contact.serviceArea} so each listing feels inviting, considered,
-            and ready to sell.
-          </p>
-          <Link href="/services" className="btn-outline mt-10">
-            Explore services
-          </Link>
         </div>
       </section>
 

@@ -1,15 +1,18 @@
 import Image from "next/image";
+import { SERVICES, placedPhoto } from "@/content/page-photos";
 import { site } from "@/content/site";
 
 export function ServiceOfferings({ showBody = true }: { showBody?: boolean }) {
   return (
     <div className="grid gap-12 md:grid-cols-3 md:gap-8 lg:gap-12">
-      {site.servicesPage.offerings.map((offering) => (
+      {site.servicesPage.offerings.map((offering) => {
+        const image = placedPhoto(SERVICES[offering.photo]);
+        return (
         <article key={offering.title}>
           <div className="group relative aspect-[4/5] overflow-hidden">
             <Image
-              src={offering.image.src}
-              alt={offering.image.alt}
+              src={image.src}
+              alt={image.alt}
               fill
               sizes="(min-width: 768px) 33vw, 100vw"
               className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.02]"
@@ -27,7 +30,8 @@ export function ServiceOfferings({ showBody = true }: { showBody?: boolean }) {
             </p>
           ) : null}
         </article>
-      ))}
+        );
+      })}
     </div>
   );
 }

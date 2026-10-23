@@ -1,544 +1,285 @@
+import fs from "node:fs";
+import path from "node:path";
+import { imageSize } from "@/content/image-size";
+import { altFor } from "@/content/photos";
+import {
+  roomTypes,
+  type PortfolioImage,
+  type PortfolioImageView,
+  type PortfolioProject,
+  type RoomType,
+  type GalleryFilter,
+} from "@/content/portfolio-types";
 import { site } from "@/content/site";
 
-export const roomTypes = [
-  "living",
-  "bedroom",
-  "dining",
-  "kitchen",
-  "details",
-] as const;
+const PHOTOS_DIR = path.join(process.cwd(), "public", "photos");
+const IMAGE_EXT = new Set([".jpg", ".jpeg", ".png", ".webp", ".gif"]);
 
-export type RoomType = (typeof roomTypes)[number];
+const roomFolders = new Set<string>(roomTypes);
 
-export type GalleryFilter = "all" | RoomType;
-
-export type PortfolioImage = {
-  id: string;
-  src: string;
-  alt: string;
-  projectId: string;
-  roomType: RoomType;
-  featured: boolean;
-  portfolioOrder: number;
-  width: number;
-  height: number;
+/**
+ * Leading word of the filename. `outdoor`, `office`, and `desk` are Details.
+ * `living-room` / `livingroom` and `dining-room` / `diningroom` count too.
+ * A later word is used when the name starts with the house, as in `sf-living-01`.
+ */
+const roomWords: Record<string, RoomType> = {
+  living: "living",
+  livingroom: "living",
+  dining: "dining",
+  diningroom: "dining",
+  bedroom: "bedroom",
+  kitchen: "kitchen",
+  details: "details",
+  outdoor: "details",
+  office: "details",
+  desk: "details",
 };
 
-export type PortfolioProject = {
-  id: string;
-  name: string;
-  slug: string;
-  coverImageId: string;
-  location?: string;
-  description?: string;
-  featured: boolean;
-  order: number;
+const coverFile: Partial<Record<(typeof site.portfolio)[number]["slug"], string>> = {
+  "3rd-st-campbell": "living-02.png",
 };
 
-export const roomTypeLabels: Record<RoomType, string> = {
-  living: "Living",
-  bedroom: "Bedroom",
-  dining: "Dining",
-  kitchen: "Kitchen",
-  details: "Details",
+type Scanned = {
+  images: PortfolioImage[];
+  projects: PortfolioProject[];
 };
 
-export const galleryFilters: { id: GalleryFilter; label: string }[] = [
-  { id: "all", label: "All" },
-  ...roomTypes.map((id) => ({ id, label: roomTypeLabels[id] })),
-];
+let cached: { signature: string; scanned: Scanned } | null = null;
 
-const projectSettings: Record<
-  (typeof site.portfolio)[number]["slug"],
-  {
-    id: string;
-    coverImageId: string;
-    featured: boolean;
-    order: number;
+function directorySignature(dir: string) {
+  const lines: string[] = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (entry.name.startsWith(".")) {
+      continue;
+    }
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      for (const name of fs.readdirSync(full)) {
+        if (name.startsWith(".")) {
+          continue;
+        }
+        const stat = fs.statSync(path.join(full, name));
+        lines.push(`${entry.name}/${name}:${stat.mtimeMs}:${stat.size}`);
+      }
+      continue;
+    }
+    if (entry.isFile()) {
+      const stat = fs.statSync(full);
+      lines.push(`${entry.name}:${stat.mtimeMs}:${stat.size}`);
+    }
   }
-> = {
-  "deodara-drive": {
-    id: "proj-deodara-drive",
-    coverImageId: "img-deodara-drive-living-01",
-    featured: true,
-    order: 1,
-  },
-  "3rd-st-campbell": {
-    id: "proj-3rd-st-campbell",
-    coverImageId: "img-3rd-st-campbell-living-02",
-    featured: true,
-    order: 2,
-  },
-  "quiet-primary-suite": {
-    id: "proj-quiet-primary-suite",
-    coverImageId: "img-quiet-primary-suite-bedroom-01",
-    featured: true,
-    order: 4,
-  },
-  "gathering-kitchen": {
-    id: "proj-gathering-kitchen",
-    coverImageId: "img-gathering-kitchen-kitchen-01",
-    featured: true,
-    order: 3,
-  },
-};
+  return lines.sort().join("\n");
+}
 
-export const portfolioImages: PortfolioImage[] = [
-  {
-    id: "img-deodara-drive-living-01",
-    src: "/portfolio/deodara-drive/living-01.jpg",
-    alt: "A staged living room with beige seating, a fiddle leaf fig, and a gold-framed painting",
-    projectId: "proj-deodara-drive",
-    roomType: "living",
-    featured: true,
-    portfolioOrder: 1,
-    width: 3024,
-    height: 4032,
-  },
-  {
-    id: "img-deodara-drive-living-02",
-    src: "/portfolio/deodara-drive/living-02.jpg",
-    alt: "A staged living room with a brick fireplace, cream seating, and a wide garden window",
-    projectId: "proj-deodara-drive",
-    roomType: "living",
-    featured: true,
-    portfolioOrder: 2,
-    width: 1280,
-    height: 852,
-  },
-  {
-    id: "img-deodara-drive-living-03",
-    src: "/portfolio/deodara-drive/living-03.jpg",
-    alt: "A staged living room looking through to dining, with a white brick fireplace and cream seating",
-    projectId: "proj-deodara-drive",
-    roomType: "living",
-    featured: true,
-    portfolioOrder: 3,
-    width: 1280,
-    height: 853,
-  },
-  {
-    id: "img-deodara-drive-living-04",
-    src: "/portfolio/deodara-drive/living-04.jpg",
-    alt: "A staged living room opening to a patio, with a white brick fireplace and cream seating",
-    projectId: "proj-deodara-drive",
-    roomType: "living",
-    featured: false,
-    portfolioOrder: 4,
-    width: 665,
-    height: 441,
-  },
-  {
-    id: "img-deodara-drive-bedroom-01",
-    src: "/portfolio/deodara-drive/bedroom-01.jpg",
-    alt: "A primary bedroom staged with a tufted bench, layered bedding, and garden windows",
-    projectId: "proj-deodara-drive",
-    roomType: "bedroom",
-    featured: true,
-    portfolioOrder: 5,
-    width: 665,
-    height: 441,
-  },
-  {
-    id: "img-deodara-drive-bedroom-02",
-    src: "/portfolio/deodara-drive/bedroom-02.jpg",
-    alt: "A guest bedroom staged with rust bedding, white nightstands, and a landscape photograph",
-    projectId: "proj-deodara-drive",
-    roomType: "bedroom",
-    featured: false,
-    portfolioOrder: 6,
-    width: 665,
-    height: 441,
-  },
-  {
-    id: "img-deodara-drive-bedroom-03",
-    src: "/portfolio/deodara-drive/bedroom-03.jpg",
-    alt: "A bedroom staged as a quiet office, with a twin bed, desk, and garden window",
-    projectId: "proj-deodara-drive",
-    roomType: "bedroom",
-    featured: false,
-    portfolioOrder: 7,
-    width: 665,
-    height: 441,
-  },
-  {
-    id: "img-deodara-drive-details-01",
-    src: "/portfolio/deodara-drive/details-01.jpg",
-    alt: "A staged dressing area with a clothing rack, ottoman, and greenery",
-    projectId: "proj-deodara-drive",
-    roomType: "details",
-    featured: false,
-    portfolioOrder: 8,
-    width: 1280,
-    height: 852,
-  },
-  {
-    id: "img-deodara-drive-details-02",
-    src: "/portfolio/deodara-drive/details-02.jpg",
-    alt: "An outdoor dining table with woven chairs under a fruit tree",
-    projectId: "proj-deodara-drive",
-    roomType: "details",
-    featured: true,
-    portfolioOrder: 9,
-    width: 1280,
-    height: 853,
-  },
-  {
-    id: "img-deodara-drive-details-03",
-    src: "/portfolio/deodara-drive/details-03.jpg",
-    alt: "A patio dining table looking through sliding doors into the kitchen",
-    projectId: "proj-deodara-drive",
-    roomType: "details",
-    featured: false,
-    portfolioOrder: 10,
-    width: 665,
-    height: 441,
-  },
-  {
-    id: "img-deodara-drive-details-04",
-    src: "/portfolio/deodara-drive/details-04.jpg",
-    alt: "A backyard patio staged with dining and lounge seating beside a fruit tree",
-    projectId: "proj-deodara-drive",
-    roomType: "details",
-    featured: false,
-    portfolioOrder: 11,
-    width: 665,
-    height: 441,
-  },
-  {
-    id: "img-3rd-st-campbell-living-01",
-    src: "/portfolio/3rd-st-campbell/living-01.png",
-    alt: "A staged living room with white sofas, a glass coffee table, and abstract artwork",
-    projectId: "proj-3rd-st-campbell",
-    roomType: "living",
-    featured: true,
-    portfolioOrder: 1,
-    width: 2032,
-    height: 1340,
-  },
-  {
-    id: "img-3rd-st-campbell-living-02",
-    src: "/portfolio/3rd-st-campbell/living-02.png",
-    alt: "An open living room looking through to the dining table and kitchen",
-    projectId: "proj-3rd-st-campbell",
-    roomType: "living",
-    featured: true,
-    portfolioOrder: 4,
-    width: 2040,
-    height: 1346,
-  },
-  {
-    id: "img-3rd-st-campbell-living-03",
-    src: "/portfolio/3rd-st-campbell/living-03.png",
-    alt: "A living room seating area with a white sofa, glass coffee table, and window light",
-    projectId: "proj-3rd-st-campbell",
-    roomType: "living",
-    featured: false,
-    portfolioOrder: 7,
-    width: 2052,
-    height: 1352,
-  },
-  {
-    id: "img-3rd-st-campbell-living-04",
-    src: "/portfolio/3rd-st-campbell/living-04.png",
-    alt: "A living room staged beside a wood front door, with white seating and a fiddle leaf fig",
-    projectId: "proj-3rd-st-campbell",
-    roomType: "living",
-    featured: false,
-    portfolioOrder: 11,
-    width: 2028,
-    height: 1346,
-  },
-  {
-    id: "img-3rd-st-campbell-kitchen-01",
-    src: "/portfolio/3rd-st-campbell/kitchen-01.png",
-    alt: "A white kitchen with a granite island, pendant lights, and stainless appliances",
-    projectId: "proj-3rd-st-campbell",
-    roomType: "kitchen",
-    featured: true,
-    portfolioOrder: 6,
-    width: 2032,
-    height: 1346,
-  },
-  {
-    id: "img-3rd-st-campbell-kitchen-02",
-    src: "/portfolio/3rd-st-campbell/kitchen-02.png",
-    alt: "A kitchen island with white stools, looking toward the range and refrigerator",
-    projectId: "proj-3rd-st-campbell",
-    roomType: "kitchen",
-    featured: false,
-    portfolioOrder: 10,
-    width: 2026,
-    height: 1340,
-  },
-  {
-    id: "img-3rd-st-campbell-kitchen-03",
-    src: "/portfolio/3rd-st-campbell/kitchen-03.png",
-    alt: "A kitchen range with patterned tile, wood shelves, and a stainless hood",
-    projectId: "proj-3rd-st-campbell",
-    roomType: "kitchen",
-    featured: false,
-    portfolioOrder: 13,
-    width: 2036,
-    height: 1348,
-  },
-  {
-    id: "img-3rd-st-campbell-kitchen-04",
-    src: "/portfolio/3rd-st-campbell/kitchen-04.png",
-    alt: "A kitchen sink and dishwasher along a granite counter with a garden window",
-    projectId: "proj-3rd-st-campbell",
-    roomType: "kitchen",
-    featured: false,
-    portfolioOrder: 16,
-    width: 2030,
-    height: 1352,
-  },
-  {
-    id: "img-3rd-st-campbell-kitchen-05",
-    src: "/portfolio/3rd-st-campbell/kitchen-05.png",
-    alt: "Kitchen details with patterned tile, open wood shelves, and a gas range",
-    projectId: "proj-3rd-st-campbell",
-    roomType: "kitchen",
-    featured: false,
-    portfolioOrder: 18,
-    width: 2034,
-    height: 1358,
-  },
-  {
-    id: "img-3rd-st-campbell-dining-01",
-    src: "/portfolio/3rd-st-campbell/dining-01.png",
-    alt: "A dining table with white chairs staged in front of the kitchen island",
-    projectId: "proj-3rd-st-campbell",
-    roomType: "dining",
-    featured: true,
-    portfolioOrder: 15,
-    width: 2028,
-    height: 1312,
-  },
-  {
-    id: "img-3rd-st-campbell-dining-02",
-    src: "/portfolio/3rd-st-campbell/dining-02.png",
-    alt: "An open dining area looking toward the kitchen, with artwork and a glass table",
-    projectId: "proj-3rd-st-campbell",
-    roomType: "dining",
-    featured: false,
-    portfolioOrder: 19,
-    width: 2034,
-    height: 1356,
-  },
-  {
-    id: "img-3rd-st-campbell-dining-03",
-    src: "/portfolio/3rd-st-campbell/dining-03.jpg",
-    alt: "A dining room with a dark table, white chairs, and a window garden view",
-    projectId: "proj-3rd-st-campbell",
-    roomType: "dining",
-    featured: false,
-    portfolioOrder: 21,
-    width: 665,
-    height: 441,
-  },
-  {
-    id: "img-3rd-st-campbell-bedroom-01",
-    src: "/portfolio/3rd-st-campbell/bedroom-01.png",
-    alt: "A primary bedroom staged with layered white and navy bedding",
-    projectId: "proj-3rd-st-campbell",
-    roomType: "bedroom",
-    featured: true,
-    portfolioOrder: 22,
-    width: 2040,
-    height: 1356,
-  },
-  {
-    id: "img-3rd-st-campbell-bedroom-02",
-    src: "/portfolio/3rd-st-campbell/bedroom-02.png",
-    alt: "A bedroom detail with a linen headboard, navy pillows, and a bedside lamp",
-    projectId: "proj-3rd-st-campbell",
-    roomType: "bedroom",
-    featured: false,
-    portfolioOrder: 23,
-    width: 2040,
-    height: 1348,
-  },
-  {
-    id: "img-3rd-st-campbell-bedroom-03",
-    src: "/portfolio/3rd-st-campbell/bedroom-03.png",
-    alt: "A bedroom staged with a desk nook, ceiling fan, and layered bedding",
-    projectId: "proj-3rd-st-campbell",
-    roomType: "bedroom",
-    featured: false,
-    portfolioOrder: 24,
-    width: 2022,
-    height: 1336,
-  },
-  {
-    id: "img-3rd-st-campbell-details-01",
-    src: "/portfolio/3rd-st-campbell/details-01.png",
-    alt: "A bathroom with a double vanity, glass shower, and tiled soaking tub",
-    projectId: "proj-3rd-st-campbell",
-    roomType: "details",
-    featured: false,
-    portfolioOrder: 25,
-    width: 2050,
-    height: 1350,
-  },
-  {
-    id: "img-3rd-st-campbell-details-02",
-    src: "/portfolio/3rd-st-campbell/details-02.png",
-    alt: "A covered patio staged with lounge chairs beside a wood fence",
-    projectId: "proj-3rd-st-campbell",
-    roomType: "details",
-    featured: false,
-    portfolioOrder: 26,
-    width: 2032,
-    height: 1348,
-  },
-  {
-    id: "img-3rd-st-campbell-details-03",
-    src: "/portfolio/3rd-st-campbell/details-03.png",
-    alt: "An outdoor dining table on a paver patio beside the house",
-    projectId: "proj-3rd-st-campbell",
-    roomType: "details",
-    featured: false,
-    portfolioOrder: 27,
-    width: 2036,
-    height: 1338,
-  },
-  {
-    id: "img-quiet-primary-suite-bedroom-01",
-    src: "/portfolio/quiet-primary-suite/bedroom-01.png",
-    alt: "A child's bedroom staged with yellow bedding, artwork, and a reading nook",
-    projectId: "proj-quiet-primary-suite",
-    roomType: "bedroom",
-    featured: true,
-    portfolioOrder: 3,
-    width: 1848,
-    height: 1216,
-  },
-  {
-    id: "img-quiet-primary-suite-bedroom-02",
-    src: "/portfolio/quiet-primary-suite/bedroom-02.png",
-    alt: "A modern bedroom staged with a low platform bed and quiet, layered textiles",
-    projectId: "proj-quiet-primary-suite",
-    roomType: "bedroom",
-    featured: false,
-    portfolioOrder: 14,
-    width: 992,
-    height: 544,
-  },
-  {
-    id: "img-gathering-kitchen-kitchen-01",
-    src: "/portfolio/gathering-kitchen/kitchen-01.png",
-    alt: "A staged kitchen with blue cabinetry, a marble island, and a rustic dining table under glass pendant lights",
-    projectId: "proj-gathering-kitchen",
-    roomType: "kitchen",
-    featured: true,
-    portfolioOrder: 2,
-    width: 1840,
-    height: 1226,
-  },
-  {
-    id: "img-gathering-kitchen-kitchen-02",
-    src: "/portfolio/gathering-kitchen/kitchen-02.png",
-    alt: "A blue kitchen with marble counters, a herringbone backsplash, and styled accessories",
-    projectId: "proj-gathering-kitchen",
-    roomType: "kitchen",
-    featured: false,
-    portfolioOrder: 8,
-    width: 1842,
-    height: 1220,
-  },
-  {
-    id: "img-gathering-kitchen-kitchen-03",
-    src: "/portfolio/gathering-kitchen/kitchen-03.png",
-    alt: "A staged kitchen and dining area with blue cabinetry, a rustic wood table, and glass pendant lights",
-    projectId: "proj-gathering-kitchen",
-    roomType: "kitchen",
-    featured: false,
-    portfolioOrder: 12,
-    width: 1672,
-    height: 941,
-  },
-  {
-    id: "img-gathering-kitchen-dining-01",
-    src: "/portfolio/gathering-kitchen/dining-01.jpg",
-    alt: "A dining room with a wood table, cream chairs, and an arched mirror",
-    projectId: "proj-gathering-kitchen",
-    roomType: "dining",
-    featured: true,
-    portfolioOrder: 5,
-    width: 1350,
-    height: 1800,
-  },
-  {
-    id: "img-gathering-kitchen-dining-02",
-    src: "/portfolio/gathering-kitchen/dining-02.png",
-    alt: "A dining room with a rustic wood table beside a blue kitchen and wood-framed glass doors",
-    projectId: "proj-gathering-kitchen",
-    roomType: "dining",
-    featured: false,
-    portfolioOrder: 9,
-    width: 1828,
-    height: 1216,
-  },
-  {
-    id: "img-gathering-kitchen-details-01",
-    src: "/portfolio/gathering-kitchen/details-01.png",
-    alt: "A wine cellar staged with a high table, bar stools, and a barrel beside lit bottle racks",
-    projectId: "proj-gathering-kitchen",
-    roomType: "details",
-    featured: false,
-    portfolioOrder: 17,
-    width: 1572,
-    height: 1172,
-  },
-  {
-    id: "img-gathering-kitchen-details-02",
-    src: "/portfolio/gathering-kitchen/details-02.png",
-    alt: "A modern outdoor seating area opening into a staged kitchen and living room",
-    projectId: "proj-gathering-kitchen",
-    roomType: "details",
-    featured: false,
-    portfolioOrder: 20,
-    width: 1728,
-    height: 1152,
-  },
-];
+function roomTypeFromName(filename: string): RoomType | null {
+  const stem = filename
+    .toLowerCase()
+    .replace(/\.[^.]+$/, "")
+    .replace(/[\s_]+/g, "-");
+  const tokens = stem.split("-").filter(Boolean);
+  if (tokens[0] === "living" && tokens[1] === "room") {
+    return "living";
+  }
+  if (tokens[0] === "dining" && tokens[1] === "room") {
+    return "dining";
+  }
+  if (tokens[0] && roomWords[tokens[0]]) {
+    return roomWords[tokens[0]];
+  }
+  for (const token of tokens) {
+    if (token === "room") {
+      continue;
+    }
+    if (roomWords[token]) {
+      return roomWords[token];
+    }
+  }
+  return null;
+}
 
-const imagesById = new Map(
-  portfolioImages.map((image) => [image.id, image] as const),
-);
+function firstNumber(filename: string) {
+  const match = filename.match(/(\d+)/);
+  return match ? Number(match[1]) : Number.MAX_SAFE_INTEGER;
+}
 
-export const portfolioProjects: PortfolioProject[] = [...site.portfolio]
-  .map((project) => {
-    const settings = projectSettings[project.slug];
+function scan(): Scanned {
+  const problems: string[] = [];
+  const entries = fs.readdirSync(PHOTOS_DIR, { withFileTypes: true });
+  const loose: { file: string; roomType: RoomType; filename: string }[] = [];
+  const byHouse = new Map<string, { file: string; roomType: RoomType; filename: string }[]>();
+
+  for (const entry of entries) {
+    if (entry.name.startsWith(".")) {
+      continue;
+    }
+    const full = path.join(PHOTOS_DIR, entry.name);
+    if (entry.isFile()) {
+      problems.push(
+        `${entry.name} is sitting in public/photos/. Move it into living, dining, bedroom, kitchen, or details, or into a house folder.`,
+      );
+      continue;
+    }
+    if (!entry.isDirectory()) {
+      continue;
+    }
+
+    const files = fs.readdirSync(full, { withFileTypes: true });
+    for (const file of files) {
+      if (file.name.startsWith(".")) {
+        continue;
+      }
+      if (!file.isFile()) {
+        problems.push(`${entry.name}/${file.name} is not a photo file.`);
+        continue;
+      }
+      const ext = path.extname(file.name).toLowerCase();
+      if (!IMAGE_EXT.has(ext)) {
+        continue;
+      }
+      const relative = `${entry.name}/${file.name}`;
+      const fromName = roomTypeFromName(file.name);
+      if (roomFolders.has(entry.name)) {
+        const roomType = entry.name as RoomType;
+        if (fromName && fromName !== roomType) {
+          problems.push(
+            `${relative} is in ${entry.name}/, but the name reads as ${fromName}. Rename it so the name and folder agree.`,
+          );
+          continue;
+        }
+        loose.push({ file: relative, roomType, filename: file.name });
+        continue;
+      }
+      if (!fromName) {
+        problems.push(
+          `${relative} needs a room in the name: living, dining, bedroom, kitchen, or details.`,
+        );
+        continue;
+      }
+      const house = byHouse.get(entry.name) ?? [];
+      house.push({ file: relative, roomType: fromName, filename: file.name });
+      byHouse.set(entry.name, house);
+    }
+  }
+
+  if (problems.length > 0) {
+    throw new Error(`Portfolio photos:\n${problems.join("\n")}`);
+  }
+
+  const knownSlugs = new Set(site.portfolio.map((project) => project.slug));
+  const projectRank = new Map(site.portfolio.map((project, index) => [project.slug, index]));
+
+  const drafts: {
+    file: string;
+    roomType: RoomType;
+    filename: string;
+    slug: string;
+    group: number;
+  }[] = [];
+
+  for (const [slug, photos] of byHouse) {
+    const group = projectRank.get(slug as (typeof site.portfolio)[number]["slug"]) ?? 500;
+    for (const photo of photos) {
+      drafts.push({ ...photo, slug, group });
+    }
+  }
+  for (const photo of loose) {
+    drafts.push({ ...photo, slug: "", group: 1000 });
+  }
+
+  drafts.sort((a, b) => {
+    if (a.group !== b.group) {
+      return a.group - b.group;
+    }
+    if (!a.slug && !b.slug) {
+      return (
+        roomTypes.indexOf(a.roomType) - roomTypes.indexOf(b.roomType) ||
+        firstNumber(a.filename) - firstNumber(b.filename) ||
+        a.filename.localeCompare(b.filename)
+      );
+    }
+    if (a.slug !== b.slug) {
+      return a.slug.localeCompare(b.slug);
+    }
+    return (
+      roomTypes.indexOf(a.roomType) - roomTypes.indexOf(b.roomType) ||
+      firstNumber(a.filename) - firstNumber(b.filename) ||
+      a.filename.localeCompare(b.filename)
+    );
+  });
+
+  const images: PortfolioImage[] = drafts.map((draft, index) => {
+    const size = imageSize(path.join(PHOTOS_DIR, draft.file));
+    const id = draft.file.replace(/\.[^.]+$/, "").replaceAll("/", "-");
     return {
-      id: settings.id,
+      id,
+      src: `/photos/${draft.file}`,
+      alt: altFor(draft.file, draft.roomType),
+      projectId: draft.slug ? `proj-${draft.slug}` : "",
+      roomType: draft.roomType,
+      featured: false,
+      portfolioOrder: index + 1,
+      width: size.width,
+      height: size.height,
+    };
+  });
+
+  const projects: PortfolioProject[] = site.portfolio.map((project, index) => {
+    const projectImages = images.filter((image) => image.projectId === `proj-${project.slug}`);
+    const preferred = coverFile[project.slug];
+    const cover =
+      projectImages.find((image) => preferred && image.src.endsWith(`/${preferred}`)) ??
+      projectImages.find((image) => image.roomType === "living") ??
+      projectImages[0];
+    if (cover) {
+      cover.featured = true;
+    }
+    return {
+      id: `proj-${project.slug}`,
       name: project.title,
       slug: project.slug,
-      coverImageId: settings.coverImageId,
-      location: project.location,
+      coverImageId: cover?.id ?? "",
+      location: "location" in project ? project.location : undefined,
       description: project.summary,
-      featured: settings.featured,
-      order: settings.order,
+      featured: true,
+      order: index + 1,
     };
-  })
-  .sort((a, b) => a.order - b.order);
+  });
 
-const projectsById = new Map(
-  portfolioProjects.map((project) => [project.id, project] as const),
-);
+  for (const slug of byHouse.keys()) {
+    if (knownSlugs.has(slug as (typeof site.portfolio)[number]["slug"])) {
+      continue;
+    }
+    problems.push(
+      `public/photos/${slug}/ is a house folder, but ${slug} is not in site.portfolio. Add the project there, or move the photos into a room folder.`,
+    );
+  }
+  if (problems.length > 0) {
+    throw new Error(`Portfolio photos:\n${problems.join("\n")}`);
+  }
 
-const projectsBySlug = new Map(
-  portfolioProjects.map((project) => [project.slug, project] as const),
-);
+  return { images, projects };
+}
 
-export type PortfolioImageView = PortfolioImage & {
-  projectName: string;
-  projectSlug: string;
-};
+function catalog(): Scanned {
+  const signature = directorySignature(PHOTOS_DIR);
+  if (cached?.signature === signature) {
+    return cached.scanned;
+  }
+  const scanned = scan();
+  cached = { signature, scanned };
+  return scanned;
+}
+
+const imagesById = () => new Map(catalog().images.map((image) => [image.id, image] as const));
+
+const projectsById = () =>
+  new Map(catalog().projects.map((project) => [project.id, project] as const));
+
+const projectsBySlug = () =>
+  new Map(catalog().projects.map((project) => [project.slug, project] as const));
 
 export function withProjectMeta(image: PortfolioImage): PortfolioImageView {
-  const project = projectsById.get(image.projectId);
+  const project = projectsById().get(image.projectId);
   return {
     ...image,
     projectName: project?.name ?? "",
@@ -547,31 +288,33 @@ export function withProjectMeta(image: PortfolioImage): PortfolioImageView {
 }
 
 export function getImageById(id: string) {
-  return imagesById.get(id);
+  return imagesById().get(id);
 }
 
 export function getProjectBySlug(slug: string) {
-  return projectsBySlug.get(slug);
+  return projectsBySlug().get(slug);
 }
 
 export function getFeaturedProjects() {
-  return portfolioProjects.filter((project) => project.featured);
+  return catalog()
+    .projects.filter((project) => project.featured)
+    .sort((a, b) => a.order - b.order);
 }
 
 export function getProjectCover(project: PortfolioProject) {
-  return imagesById.get(project.coverImageId);
+  return imagesById().get(project.coverImageId);
 }
 
 export function getProjectImages(projectId: string) {
-  return portfolioImages
-    .filter((image) => image.projectId === projectId)
+  return catalog()
+    .images.filter((image) => image.projectId === projectId)
     .sort((a, b) => a.portfolioOrder - b.portfolioOrder)
     .map(withProjectMeta);
 }
 
 export function getGalleryImages(filter: GalleryFilter = "all") {
-  return portfolioImages
-    .filter((image) => filter === "all" || image.roomType === filter)
+  return catalog()
+    .images.filter((image) => filter === "all" || image.roomType === filter)
     .sort((a, b) => a.portfolioOrder - b.portfolioOrder)
     .map(withProjectMeta);
 }

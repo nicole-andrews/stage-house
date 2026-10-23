@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ServiceOfferings } from "@/components/ServiceOfferings";
 import { Testimonials } from "@/components/Testimonials";
+import { SERVICES, placedPhoto } from "@/content/page-photos";
 import { site } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -11,7 +12,8 @@ export const metadata: Metadata = {
 
 export default function ServicesPage() {
   const { servicesPage } = site;
-  const { hero } = servicesPage.images;
+  const hero = placedPhoto(SERVICES.hero_photo);
+  const approach = placedPhoto(SERVICES.approach_photo);
 
   return (
     <>
@@ -22,10 +24,10 @@ export default function ServicesPage() {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-left"
+          className="object-cover object-[30%_center]"
         />
         <div className="relative z-10 mx-auto flex min-h-[68vh] max-w-7xl items-center px-6 py-16 sm:min-h-[78vh] lg:px-10 lg:py-24">
-          <div className="max-w-lg">
+          <div className="ml-auto w-full max-w-lg bg-white/90 px-7 py-8 sm:px-10 sm:py-12">
             <p className="text-[0.7rem] tracking-[0.28em] text-taupe-dark uppercase">
               {servicesPage.eyebrow}
             </p>
@@ -47,14 +49,14 @@ export default function ServicesPage() {
 
       <section className="relative min-h-[32rem] overflow-hidden lg:min-h-[40rem]">
         <Image
-          src={servicesPage.images.approach.src}
-          alt={servicesPage.images.approach.alt}
+          src={approach.src}
+          alt={approach.alt}
           fill
           sizes="100vw"
           className="object-cover object-left"
         />
         <div className="relative z-10 mx-auto flex min-h-[32rem] max-w-7xl items-center px-6 py-24 lg:min-h-[40rem] lg:px-10 lg:py-32">
-          <div className="max-w-lg">
+          <div className="max-w-lg bg-white/70 px-7 py-9 backdrop-blur-md sm:px-10 sm:py-12">
             <h2 className="font-serif text-4xl font-normal leading-snug text-balance sm:text-5xl">
               {servicesPage.approach.headline}
             </h2>

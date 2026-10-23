@@ -2,7 +2,7 @@ import Image from "next/image";
 import {
   roomTypeLabels,
   type PortfolioImageView,
-} from "@/content/portfolio";
+} from "@/content/portfolio-types";
 
 export function PortfolioGallery({
   images,

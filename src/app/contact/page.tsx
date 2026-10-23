@@ -12,7 +12,7 @@ export default function ContactPage() {
     <>
       <PageHero
         eyebrow="Contact"
-        title="Request a consultation."
+        title="Contact Us"
         body="Tell us about the property and timeline. We’ll email you back after we review the details."
       />
       <section className="mx-auto grid max-w-6xl gap-10 px-5 pb-20 lg:grid-cols-[0.9fr_1.1fr]">

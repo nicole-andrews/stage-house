@@ -1,7 +1,7 @@
 import {
   galleryFilters,
   type GalleryFilter,
-} from "@/content/portfolio";
+} from "@/content/portfolio-types";
 
 export function PortfolioFilters({
   value,

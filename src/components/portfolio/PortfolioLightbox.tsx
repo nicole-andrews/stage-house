@@ -6,7 +6,7 @@ import { createPortal } from "react-dom";
 import {
   roomTypeLabels,
   type PortfolioImageView,
-} from "@/content/portfolio";
+} from "@/content/portfolio-types";
 
 export function PortfolioLightbox({
   images,
@@ -82,14 +82,20 @@ export function PortfolioLightbox({
       <div className="flex items-center justify-between gap-6 px-5 py-5 sm:px-8">
         <div>
           <p id={titleId} className="font-serif text-2xl font-normal">
-            {image.projectName}
+            {image.projectName || roomTypeLabels[image.roomType]}
           </p>
-          <p
-            id={descriptionId}
-            className="mt-1 text-[0.7rem] tracking-[0.18em] text-white/70 uppercase"
-          >
-            {roomTypeLabels[image.roomType]}
-          </p>
+          {image.projectName ? (
+            <p
+              id={descriptionId}
+              className="mt-1 text-[0.7rem] tracking-[0.18em] text-white/70 uppercase"
+            >
+              {roomTypeLabels[image.roomType]}
+            </p>
+          ) : (
+            <p id={descriptionId} className="sr-only">
+              {roomTypeLabels[image.roomType]}
+            </p>
+          )}
         </div>
         <button
           ref={closeRef}

@@ -21,19 +21,23 @@ Marketing site for a home staging business. Goal: generate consultation leads an
 
 - `Requirements.md` — pages and primary CTA
 - `src/content/site.ts` — name, nav, copy, services, portfolio titles, testimonials, contact
-- `src/content/portfolio.ts` — portfolio projects, images, and room metadata
+- `src/content/page-photos.json` — photos on Home, About, and Services. Each key is a slot (`hero_photo`, `intro_photo`). The value is the file, alt text, pixel size, and where that slot sits. Change a page photo here.
+- `src/content/photos.ts` — optional alt text for portfolio photos, keyed by the file path under `public/photos/`
+- `src/content/portfolio.ts` — reads `public/photos/` and builds each project, room filter, and order
 - Do not hardcode marketing copy in components when it belongs in `site.ts`
 
 ## Site map
 
-Home, About, Services, Portfolio, Testimonials, Contact. Primary CTA is always **Request a Consultation** → `/contact`.
+Home, About, Services, Portfolio, Testimonials, Contact. Primary CTA is always **Contact Us** → `/contact`.
 
 ## Conventions
 
 - Server components by default; `"use client"` only for forms, menus, and other interactive UI
 - Shared chrome lives in `src/components/`
 - Brand assets: `public/brand/` (logo from `icons/`)
-- Portfolio photos go in `public/` and are referenced from `site.ts`
+- Portfolio photos live in `public/photos/`. A featured house is a folder named with its `site.portfolio` slug (`public/photos/sf/`). The filename sets the filter: start it with `living`, `dining`, `bedroom`, `kitchen`, or `details`. `livingroom`, `diningroom`, `outdoor`, `office`, and `desk` count too (`outdoor`, `office`, and `desk` are Details). A photo that is not part of a featured house goes in `public/photos/living/`, `dining/`, `bedroom/`, `kitchen/`, or `details/` — the folder is the filter. Dropping a file in the right place adds it to the portfolio.
+- Home, About, and Services slots are set in `page-photos.json`; `placedPhoto()` resolves the file. Those paths can point at the same photos. The gitignored `images/` folder is the archive and is not deployed.
+- A listing URL is intake only. Follow `.cursor/skills/import-listing-photos`: save staged photos under `images/<street-name>/` as `roomType-specifics-street-name.jpg` (`livingroom-01-main-ct.jpg`, `bedroom-kids-main-ct.jpg`). Do not publish them until asked.
 - Keep the look: warm white, charcoal text, taupe accents, serif headlines, photography-first layouts
 
 ## Working with this agent
