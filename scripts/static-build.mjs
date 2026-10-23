@@ -1,28 +1,52 @@
 import { spawn } from "node:child_process";
-import { rm, rename } from "node:fs/promises";
+import { access, rename, rm } from "node:fs/promises";
 import path from "node:path";
 
 const root = process.cwd();
-const apiDir = path.join(root, "src/app/api");
-const stashDir = path.join(root, ".api-stash");
+const nextBin = path.join(root, "node_modules/next/dist/bin/next");
 
-// A static export cannot include POST /api/consultation. The Worker serves that route.
-await rm(path.join(root, ".next"), { recursive: true, force: true });
-await rename(apiDir, stashDir);
-
-try {
-  const code = await new Promise((resolve, reject) => {
-    const child = spawn(process.execPath, [path.join(root, "node_modules/next/dist/bin/next"), "build"], {
+function runNextBuild(extraEnv = {}) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(process.execPath, [nextBin, "build"], {
       stdio: "inherit",
-      env: { ...process.env, STATIC_EXPORT: "1" },
+      env: { ...process.env, ...extraEnv },
     });
     child.on("error", reject);
-    child.on("exit", resolve);
+    child.on("exit", (code) => {
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error(`next build exited with ${code}`));
+      }
+    });
   });
+}
 
-  if (code !== 0) {
-    throw new Error(`next build exited with ${code}`);
+// Vercel hosts the consultation route as a function. Static export is for Cloudflare.
+if (process.env.VERCEL) {
+  await runNextBuild();
+} else {
+  const apiDir = path.join(root, "src/app/api");
+  const stashDir = path.join(root, ".api-stash");
+  let stashed = false;
+
+  await rm(path.join(root, ".next"), { recursive: true, force: true });
+
+  try {
+    await access(apiDir);
+    await rename(apiDir, stashDir);
+    stashed = true;
+  } catch (error) {
+    if (error.code !== "ENOENT") {
+      throw error;
+    }
   }
-} finally {
-  await rename(stashDir, apiDir);
+
+  try {
+    await runNextBuild({ STATIC_EXPORT: "1" });
+  } finally {
+    if (stashed) {
+      await rename(stashDir, apiDir);
+    }
+  }
 }
